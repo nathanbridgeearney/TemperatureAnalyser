@@ -10,6 +10,7 @@
 
 import ecs100.*;
 
+import java.lang.reflect.Array;
 import java.util.*;
 
 /** The program contains several methods for analysing the readings of the temperature levels over the course of a day.
@@ -31,9 +32,12 @@ public class TemperatureAnalyser{
         if (listOfNumbers.size() != 0) {
             this.printAverage(listOfNumbers);
             this.plotLevels(listOfNumbers);
+            this.medianOfList(listOfNumbers);
 
             UI.printf("Maximum level was:  %f\n", this.maximumOfList(listOfNumbers));
             UI.printf("Minimum level was:  %f\n", this.minimumOfList(listOfNumbers));
+            UI.printf("Median level was:  %f\n" , this.medianOfList(listOfNumbers));
+            UI.printf("Average level was:  %f\n" , this.printAverage(listOfNumbers));
         }
         else {
             UI.println("No readings");
@@ -54,7 +58,6 @@ public class TemperatureAnalyser{
             average = average + nums;
         }
         average = average / length;
-        UI.println(average);
         return average;
     }
 
@@ -81,9 +84,16 @@ public class TemperatureAnalyser{
         int startPos = 0;
         /*# YOUR CODE HERE */
         for (double value: listOfNumbers) {
-            UI.fillRect(left + startPos,base - value,25, value );
-            startPos = startPos + step;
+            if (!(value >= 400)) {
+                UI.fillRect(left + startPos, base - value, step, value);
+                startPos = startPos + 2 * step;
+            } else {
+                UI.fillRect(left + startPos, base - 400, step, 400);
+                UI.drawString("*",left + startPos + (step >> 1), base - 400);
+                startPos = startPos + 2 * step;
+            }
         }
+        UI.drawLine(left,base,1000,base);
         UI.println("Finished plotting");
     }
 
@@ -94,10 +104,8 @@ public class TemperatureAnalyser{
      *  COMPLETION
      */
     public double maximumOfList(ArrayList<Double> listOfNumbers) {
-        UI.println("method maximumOfList() is not implemented yet");  // remove when you have implemented your method
         /*# YOUR CODE HERE */
-
-        return 0;  //remove when you have implemented your method
+        return Collections.max(listOfNumbers);
     }
 
     /** Find and return the minimum level in the list
@@ -107,12 +115,17 @@ public class TemperatureAnalyser{
      *  COMPLETION
      */
     public double minimumOfList(ArrayList<Double> listOfNumbers) {
-        UI.println("method minimumOfList() is not implemented yet");  // remove when you have implemented your method
         /*# YOUR CODE HERE */
-
-        return 0;  //remove when you have implemented your method
+        return Collections.min(listOfNumbers);
     }
+    public double medianOfList(ArrayList<Double> listOfNumbers){
+        int size = listOfNumbers.size();
+        Double[] array = new Double[size];
+        listOfNumbers.toArray(array);
+        Arrays.sort(array);
 
+        return array[(size)/2];
+    }
 
 
     public void setupGUI() {
